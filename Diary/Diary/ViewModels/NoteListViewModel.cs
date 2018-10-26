@@ -1,16 +1,18 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Input;
-using Diary.Service;
+using Diary.IService;
+using Diary.Models;
 using Xamarin.Forms;
 using Diary.Views;
+using Java.Sql;
 
 namespace Diary.ViewModels
 {
    public class NoteListViewModel : BaseViewModel
     {
-        public ObservableCollection<NoteViewModel> AllNotes { get; set; }
         public ICommand CreateNoteCommand { protected set; get; }
         public ICommand DeleteNoteCommand { protected set; get; }
         public ICommand SaveNoteCommand { protected set; get; }
@@ -21,6 +23,8 @@ namespace Diary.ViewModels
         {
             _uiService = uiService;
             AllNotes = new ObservableCollection<NoteViewModel>();
+            var task = new Task(async () => await GetNotesFromDb());
+            task.Start();
             CreateNoteCommand = new Command(CreateNote);
             DeleteNoteCommand = new Command(DeleteNote);
             SaveNoteCommand = new Command(SaveNote);
@@ -38,7 +42,17 @@ namespace Diary.ViewModels
                 OnPropertyChanged(() => NotesLeft);
             }
         }
-
+        private ObservableCollection<NoteViewModel> _notesAll;
+        public ObservableCollection<NoteViewModel> AllNotes
+        {
+            get { return _notesAll; }
+            set
+            {
+                
+                _notesAll = value;
+                OnPropertyChanged(() => AllNotes);
+            }
+        }
         private ObservableCollection<NoteViewModel> _notesRight;
         public ObservableCollection<NoteViewModel> NotesRight
         {
@@ -75,7 +89,16 @@ namespace Diary.ViewModels
             Navigation.PopAsync();
         }
 
-        private void SaveNote(object noteObject)
+        public async Task GetNotesFromDb()
+        {
+           var notes = await App.Database.GetItemsAsync();
+            foreach (var note in notes)
+            {
+                AllNotes.Add((NoteViewModel)ConvertToNote(note).note);
+            }
+        }
+
+        private async void SaveNote(object noteObject)
         {
             try
             {
@@ -91,6 +114,7 @@ namespace Diary.ViewModels
                     {
                         note.Id = AllNotes.Count + 1;
                         AllNotes.Add(note);
+                        await App.Database.SaveItemAsync((Note)ConvertToNote(note).note);
                     }
                 }
                 else                
@@ -120,12 +144,13 @@ namespace Diary.ViewModels
             
         }
 
-        private void DeleteNote(object noteObject)
+        private async void DeleteNote(object noteObject)
         {
             var note = noteObject as NoteViewModel;
             if (note != null)
             {
                 AllNotes.Remove(note);
+              await  App.Database.DeleteItemAsync((Note)ConvertToNote(note).note).ConfigureAwait(false); ;
             }
             Back();
         }
@@ -133,6 +158,36 @@ namespace Diary.ViewModels
         private void CreateNote()
         {
             Navigation.PushAsync(new NotePage(new NoteViewModel() { Notes = this }));
-        }     
+        }
+
+        public (Type type, object note) ConvertToNote(object noteObject)
+        {
+            if (noteObject.GetType() == typeof(NoteViewModel))
+            {
+               var noteModel = (NoteViewModel)noteObject;
+                var noteNew = new Note()
+                {
+                    Id = noteModel.Id,
+                    Message = noteModel.Message,
+                    Title = noteModel.Title
+                };
+                var result = (type: noteNew.GetType(), note: noteNew);
+                return result;
+            }
+            else
+            {
+               var noteModel = (Note) noteObject;
+                var noteNew = new NoteViewModel()
+                {
+                    Id = noteModel.Id,
+                    Message = noteModel.Message,
+                    Title = noteModel.Title
+                };
+                var result = (type: noteNew.GetType(), note: noteNew);
+                return result;
+            }
+
+        }
     }
+
 }

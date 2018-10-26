@@ -1,15 +1,8 @@
-﻿using System;
-
-using Android.App;
-using Android.Content;
+﻿using Android.App;
 using Android.Content.PM;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
 using Android.OS;
 using Diary.Droid.Service;
-using Diary.Service;
-using Xamarin.Forms;
+using Diary.IService;
 
 namespace Diary.Droid
 {

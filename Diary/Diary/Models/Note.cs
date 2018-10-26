@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using SQLite;
 
 namespace Diary.Models
 {
-   public class Note
+    [Table("Notes")]
+    public class Note
     {
+        [PrimaryKey, AutoIncrement, Column("_id")]
         public int Id { get; set; }
         public string Title { get; set; }
         public string Message { get; set; }

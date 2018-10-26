@@ -7,6 +7,20 @@ namespace Diary
 {
     public partial class App : Application
     {
+        public const string DATABASE_NAME = "Notes.db";
+
+        public static DiaryRepository database;
+        public static DiaryRepository Database
+        {
+            get
+            {
+                if (database == null)
+                {
+                    database = new DiaryRepository(DATABASE_NAME);
+                }
+                return database;
+            }
+        }
         private readonly IPlatformInitializer _initializer;
         public static readonly IDependencyContainer Container = new DependencyContainer();
         public App()

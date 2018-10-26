@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Diary.Service
+namespace Diary.IService
 {
    public interface IUIService
    {

@@ -1,4 +1,4 @@
-﻿using Diary.Service;
+﻿using Diary.IService;
 using Diary.ViewModels;
 using Xamarin.Forms;
 

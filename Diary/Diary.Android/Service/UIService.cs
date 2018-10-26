@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Android.App;
-using Android.Content;
-using Android.Provider;
 using Android.Widget;
-using Diary.Constants;
-using Diary.Service;
+using Diary.IService;
 using Xamarin.Forms;
 using Application = Android.App.Application;
 
