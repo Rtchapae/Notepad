@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Diary.Views.NotePage">
+    <ContentPage.Padding>
+        <OnPlatform x:TypeArguments="Thickness">
+            <On Platform="iOS" Value="10, 20, 10, 0" />
+            <On Platform="Android" Value="10, 0" />
+        </OnPlatform>
+    </ContentPage.Padding>
+    <StackLayout>
+        <StackLayout x:Name="noteStack">
+            <Label Text="Тема" />
+            <Entry Text="{Binding Title}"   FontSize="Medium" />
+            <Label Text="Текст" />
+            <Editor Text="{Binding Message}" FontSize="Medium" AutoSize="Disabled" />
+        </StackLayout>
+        <StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand">
+            <Button Text="Добавить" Command="{Binding Notes.SaveNoteCommand}" CommandParameter="{Binding}" />
+            <Button Text="Удалить" Command="{Binding Notes.DeleteNoteCommand}" CommandParameter="{Binding}" />
+            <Button Text="Назад" Command="{Binding Path=Notes.BackCommand}" />
+        </StackLayout>
+    </StackLayout>
+</ContentPage>
