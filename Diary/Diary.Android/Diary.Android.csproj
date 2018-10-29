@@ -68,9 +68,7 @@
     <Compile Include="Service\UIService.cs" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidAsset Include="Assets\Notes.db">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </AndroidAsset>
+    <AndroidAsset Include="Assets\Notes.sqlite" />
     <None Include="Resources\AboutResources.txt" />
     <None Include="Assets\AboutAssets.txt" />
     <None Include="Properties\AndroidManifest.xml" />

@@ -7,7 +7,7 @@ namespace Diary
 {
     public partial class App : Application
     {
-        public const string DATABASE_NAME = "Notes.db";
+        public const string DATABASE_NAME = "Notes.sqlite";
 
         public static DiaryRepository database;
         public static DiaryRepository Database

@@ -12,43 +12,42 @@ using Xamarin.Forms;
 
 namespace Diary
 {
-    public class DiaryRepository 
+    public class DiaryRepository
     {
-        SQLiteAsyncConnection database;
+        SQLiteConnection database;
+
         public DiaryRepository(string filename)
         {
             string databasePath = DependencyService.Get<ISQLite>().GetDatabasePath(filename);
-            database = new SQLiteAsyncConnection(databasePath);
+            database = new SQLiteConnection(databasePath);
+            database.CreateTable<Note>();
         }
 
-        public async Task CreateTable()
+        public List<Note> GetItems()
         {
-            await database.CreateTableAsync<Note>().ConfigureAwait(false);
-        }
-        public async Task<List<Note>> GetItemsAsync()
-        {
-            var notes = await database.Table<Note>().ToListAsync().ConfigureAwait(false);
+            var notes = (from i in database.Table<Note>() select i).ToList();
             return notes;
         }
-        public async Task<Note> GetItemAsync(int id)
+
+        public Note GetItem(int id)
         {
-            return await database.GetAsync<Note>(id).ConfigureAwait(false);
+            return database.Get<Note>(id);
         }
-        public async Task<int> DeleteItemAsync(Note item)
+
+        public int DeleteItem(Note item)
         {
-            return await database.DeleteAsync(item).ConfigureAwait(false);
+            return database.Delete(item);
         }
-        public async Task<int> SaveItemAsync(Note item)
+
+        public int SaveItem(Note item)
         {
-            if (item.Id != 0)
-            {
-               await database.UpdateAsync(item).ConfigureAwait(false);
-                return item.Id;
-            }
-            else
-            {
-                return await database.InsertAsync(item).ConfigureAwait(false);
-            }
+            return database.Insert(item);
+        }
+
+        public int UpdateItem(Note item)
+        {
+            database.Update(item);
+            return item.Id;
         }
     }
 }

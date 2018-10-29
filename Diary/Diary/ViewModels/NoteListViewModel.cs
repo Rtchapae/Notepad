@@ -21,10 +21,8 @@ namespace Diary.ViewModels
         private readonly IUIService _uiService;
         public NoteListViewModel(IUIService uiService)
         {
-            _uiService = uiService;
-            AllNotes = new ObservableCollection<NoteViewModel>();
-            var task = new Task(async () => await GetNotesFromDb());
-            task.Start();
+            _uiService = uiService;    
+            GetNotesFromDb();
             CreateNoteCommand = new Command(CreateNote);
             DeleteNoteCommand = new Command(DeleteNote);
             SaveNoteCommand = new Command(SaveNote);
@@ -89,16 +87,19 @@ namespace Diary.ViewModels
             Navigation.PopAsync();
         }
 
-        public async Task GetNotesFromDb()
+        public void GetNotesFromDb()
         {
-           var notes = await App.Database.GetItemsAsync();
+            AllNotes = new ObservableCollection<NoteViewModel>();
+            var notes =  App.Database.GetItems();
             foreach (var note in notes)
             {
                 AllNotes.Add((NoteViewModel)ConvertToNote(note).note);
             }
+
+            ShowNotes(AllNotes);
         }
 
-        private async void SaveNote(object noteObject)
+        private void SaveNote(object noteObject)
         {
             try
             {
@@ -109,32 +110,18 @@ namespace Diary.ViewModels
                         var old = AllNotes.First(_ => _.Id == note.Id);
                         int id = AllNotes.IndexOf(old);
                         AllNotes[id] = note;
+                        App.Database.UpdateItem((Note)ConvertToNote(note).note);
                     }
                     else
                     {
                         note.Id = AllNotes.Count + 1;
                         AllNotes.Add(note);
-                        await App.Database.SaveItemAsync((Note)ConvertToNote(note).note);
+                        App.Database.SaveItem((Note)ConvertToNote(note).note);
                     }
                 }
-                else                
+                else
                     throw new Exception();
-                bool isLeftNote = true;
-                NotesRight = new ObservableCollection<NoteViewModel>();
-                NotesLeft = new ObservableCollection<NoteViewModel>();
-                foreach (var allNote in AllNotes)
-                { 
-                    if (isLeftNote)
-                    {
-                        NotesLeft.Add(allNote);
-                        isLeftNote = false;
-                    }
-                    else
-                    {
-                        NotesRight.Add(allNote);
-                        isLeftNote = true;
-                    }
-                }
+                ShowNotes(AllNotes);
                 Back();
             }
             catch (Exception e)
@@ -144,13 +131,33 @@ namespace Diary.ViewModels
             
         }
 
-        private async void DeleteNote(object noteObject)
+        private void ShowNotes(ObservableCollection<NoteViewModel> allNotes)
+        {
+            bool isLeftNote = true;
+            NotesRight = new ObservableCollection<NoteViewModel>();
+            NotesLeft = new ObservableCollection<NoteViewModel>();
+            foreach (var allNote in allNotes)
+            {
+                if (isLeftNote)
+                {
+                    NotesLeft.Add(allNote);
+                    isLeftNote = false;
+                }
+                else
+                {
+                    NotesRight.Add(allNote);
+                    isLeftNote = true;
+                }
+            }
+        }
+
+        private void DeleteNote(object noteObject)
         {
             var note = noteObject as NoteViewModel;
             if (note != null)
             {
                 AllNotes.Remove(note);
-              await  App.Database.DeleteItemAsync((Note)ConvertToNote(note).note).ConfigureAwait(false); ;
+                App.Database.DeleteItem((Note)ConvertToNote(note).note);
             }
             Back();
         }
