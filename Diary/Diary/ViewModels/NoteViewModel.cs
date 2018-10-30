@@ -1,4 +1,6 @@
-﻿using Diary.Models;
+﻿using System;
+using System.Globalization;
+using Diary.Models;
 
 namespace Diary.ViewModels
 {
@@ -17,6 +19,8 @@ namespace Diary.ViewModels
             set
             {
                 _title = value;
+                if (string.IsNullOrEmpty(_title))
+                    _title = DateTime.Today.ToShortDateString();
                 OnPropertyChanged(() => Title);
             }
         }

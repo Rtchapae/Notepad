@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using Diary.IService;
 using Diary.Models;
 using Xamarin.Forms;
 using Diary.Views;
-using Java.Sql;
 
 namespace Diary.ViewModels
 {
@@ -29,6 +27,7 @@ namespace Diary.ViewModels
             BackCommand = new Command(Back);
         }
 
+        #region Property
 
         private ObservableCollection<NoteViewModel> _notesLeft;
         public ObservableCollection<NoteViewModel> NotesLeft
@@ -46,7 +45,6 @@ namespace Diary.ViewModels
             get { return _notesAll; }
             set
             {
-                
                 _notesAll = value;
                 OnPropertyChanged(() => AllNotes);
             }
@@ -73,6 +71,7 @@ namespace Diary.ViewModels
                 if (SelectedNote != value)
                 {
                     NoteViewModel temp = value;
+                    temp.Notes = this;
                     _selectedNote = null;
                     OnPropertyChanged(() => SelectedNote);
                     Navigation.PushAsync(new NotePage(temp));
@@ -80,12 +79,70 @@ namespace Diary.ViewModels
             }
         }
 
-   
+        #endregion
 
+
+
+        #region CommandMethods
         private void Back()
         {
             Navigation.PopAsync();
         }
+
+        private void SaveNote(object noteObject)
+        {
+            try
+            {
+                if (noteObject is NoteViewModel note && note.IsValid)
+                {
+                    note.Note.Title = string.IsNullOrEmpty(note.Note.Title)
+                        ? DateTime.Today.ToShortDateString()
+                        : note.Note.Title;
+                    if (AllNotes.Any(_ => _.Id == note.Id))
+                    {
+                        var old = AllNotes.First(_ => _.Id == note.Id);
+                        int id = AllNotes.IndexOf(old);
+                        AllNotes[id] = note;
+                        App.Database.UpdateItem((Note) ConvertToNote(note).note);
+                    }
+                    else
+                    {
+                        note.Id = AllNotes.Count + 1;
+                        AllNotes.Add(note);
+                        App.Database.SaveItem((Note) ConvertToNote(note).note);
+                    }
+                }
+                else
+                    throw new Exception();
+
+                ShowNotes(AllNotes);
+                Back();
+            }
+            catch (Exception e)
+            {
+                _uiService.Alert("Введите текст");
+            }
+        }
+
+        private void DeleteNote(object noteObject)
+            {
+                var note = noteObject as NoteViewModel;
+                if (note != null)
+                {
+                    AllNotes.Remove(note);
+                    App.Database.DeleteItem((Note)ConvertToNote(note).note);
+                    ShowNotes(AllNotes);
+                }
+                Back();
+            }
+
+            private void CreateNote()
+            {
+                Navigation.PushAsync(new NotePage(new NoteViewModel() { Notes = this }));
+            }
+
+        #endregion
+
 
         public void GetNotesFromDb()
         {
@@ -95,41 +152,10 @@ namespace Diary.ViewModels
             {
                 AllNotes.Add((NoteViewModel)ConvertToNote(note).note);
             }
-
             ShowNotes(AllNotes);
         }
 
-        private void SaveNote(object noteObject)
-        {
-            try
-            {
-                if (noteObject is NoteViewModel note && note.IsValid)
-                {
-                    if (AllNotes.Any(_ => _.Id == note.Id))
-                    {
-                        var old = AllNotes.First(_ => _.Id == note.Id);
-                        int id = AllNotes.IndexOf(old);
-                        AllNotes[id] = note;
-                        App.Database.UpdateItem((Note)ConvertToNote(note).note);
-                    }
-                    else
-                    {
-                        note.Id = AllNotes.Count + 1;
-                        AllNotes.Add(note);
-                        App.Database.SaveItem((Note)ConvertToNote(note).note);
-                    }
-                }
-                else
-                    throw new Exception();
-                ShowNotes(AllNotes);
-                Back();
-            }
-            catch (Exception e)
-            {
-                _uiService.Alert("Введите текст");
-            }
-            
-        }
+      
 
         private void ShowNotes(ObservableCollection<NoteViewModel> allNotes)
         {
@@ -150,28 +176,11 @@ namespace Diary.ViewModels
                 }
             }
         }
-
-        private void DeleteNote(object noteObject)
-        {
-            var note = noteObject as NoteViewModel;
-            if (note != null)
-            {
-                AllNotes.Remove(note);
-                App.Database.DeleteItem((Note)ConvertToNote(note).note);
-            }
-            Back();
-        }
-
-        private void CreateNote()
-        {
-            Navigation.PushAsync(new NotePage(new NoteViewModel() { Notes = this }));
-        }
-
         public (Type type, object note) ConvertToNote(object noteObject)
         {
             if (noteObject.GetType() == typeof(NoteViewModel))
             {
-               var noteModel = (NoteViewModel)noteObject;
+                var noteModel = (NoteViewModel)noteObject;
                 var noteNew = new Note()
                 {
                     Id = noteModel.Id,
@@ -183,7 +192,7 @@ namespace Diary.ViewModels
             }
             else
             {
-               var noteModel = (Note) noteObject;
+                var noteModel = (Note)noteObject;
                 var noteNew = new NoteViewModel()
                 {
                     Id = noteModel.Id,
@@ -195,6 +204,8 @@ namespace Diary.ViewModels
             }
 
         }
+
+
     }
 
 }

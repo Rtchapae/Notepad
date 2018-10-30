@@ -1,5 +1,4 @@
 ﻿using Android.Content;
-using Android.Graphics.Drawables;
 using Diary.Customs;
 using Diary.Droid.Renderers;
 using Xamarin.Forms;
@@ -21,12 +20,6 @@ namespace Diary.Droid.Renderers
            if (Control != null)
            {
                Control.VerticalScrollBarEnabled = false;
-               Control.FastScrollEnabled = false;
-               Control.SmoothScrollbarEnabled = false;
-               Control.ScrollbarFadingEnabled = false;
-               Control.ScrollingCacheEnabled = false;
-               Control.OverscrollHeader = new AdaptiveIconDrawable(Background, Background);
-               Control.NestedScrollingEnabled = false;
            }
        }
    }
