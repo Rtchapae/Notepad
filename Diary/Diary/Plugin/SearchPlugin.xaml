@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentView xmlns="http://xamarin.com/schemas/2014/forms" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Diary.Plugin.SearchPlugin">
+    <StackLayout>
+        <StackLayout>
+        <Entry x:Name="searchEntry" TextChanged="SearchEntry_OnTextChanged" Placeholder="Поиск..." HorizontalOptions="FillAndExpand" />
+        </StackLayout>
+        <StackLayout Orientation="Horizontal" VerticalOptions="Start" HorizontalOptions="Center">
+            <Button x:Name="ButtonBlue" HeightRequest="10" Clicked="OnClicked" BackgroundColor="Blue" />
+            <Button x:Name="ButtonRed" HeightRequest="10"  Clicked="OnClicked" BackgroundColor="Red"/>
+            <Button x:Name="ButtonGreen" HeightRequest="10"  Clicked="OnClicked" BackgroundColor="Green"/>
+            <Button x:Name="ButtonYellow" HeightRequest="10"  Clicked="OnClicked" BackgroundColor="Yellow"/>
+        </StackLayout>
+        
+    </StackLayout>
+</ContentView>

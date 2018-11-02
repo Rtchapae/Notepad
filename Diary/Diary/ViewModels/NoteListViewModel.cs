@@ -95,9 +95,9 @@ namespace Diary.ViewModels
             {
                 if (noteObject is NoteViewModel note && note.IsValid)
                 {
-                    note.Note.Title = string.IsNullOrEmpty(note.Note.Title)
+                    note.Title = string.IsNullOrEmpty(note.Title)
                         ? DateTime.Today.ToShortDateString()
-                        : note.Note.Title;
+                        : note.Title;
                     if (AllNotes.Any(_ => _.Id == note.Id))
                     {
                         var old = AllNotes.First(_ => _.Id == note.Id);
@@ -203,6 +203,20 @@ namespace Diary.ViewModels
                 return result;
             }
 
+        }
+
+        public void SearchNotes(string text)
+        {
+            if (!string.IsNullOrEmpty(text))
+            {
+                var notes = AllNotes.Where(u => u.Message.Contains(text) || u.Title.Contains(text)).ToList();
+                AllNotes = new ObservableCollection<NoteViewModel>(notes);
+                ShowNotes(AllNotes);
+            }
+            else
+            {
+                GetNotesFromDb();
+            }
         }
 
 

@@ -19,8 +19,6 @@ namespace Diary.ViewModels
             set
             {
                 _title = value;
-                if (string.IsNullOrEmpty(_title))
-                    _title = DateTime.Today.ToShortDateString();
                 OnPropertyChanged(() => Title);
             }
         }

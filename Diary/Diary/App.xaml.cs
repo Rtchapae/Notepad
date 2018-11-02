@@ -1,4 +1,6 @@
-﻿using Diary.Views;
+﻿using Diary.IService;
+using Diary.ViewModels;
+using Diary.Views;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -36,7 +38,7 @@ namespace Diary
         protected override void OnStart()
         {
             _initializer?.RegisterTypes(Container);
-            MainPage = new NavigationPage(new NotesListPage());
+            MainPage = new NavigationPage(new NotesListPage(new NoteListViewModel((IUIService)App.Container.Resolve(typeof(IUIService)))));
             // Handle when your app starts
         }
 

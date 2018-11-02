@@ -11,22 +11,22 @@
     <StackLayout>
         <StackLayout x:Name="noteStack">
             <Label Text="Тема" />
-            <Entry Text="{Binding Title}"   FontSize="22" />
+            <Entry Text="{Binding Title}"   FontSize="18" />
             <Label Text="Текст" />
-            <Editor Text="{Binding Message}"  FontSize="Medium" AutoSize="Disabled" />
+            <Editor Text="{Binding Message}"  FontSize="Medium" />
         </StackLayout>
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <Button HorizontalOptions="Center"  Text="Добавить" Command="{Binding Notes.SaveNoteCommand}" CommandParameter="{Binding}" />
-            <Button HorizontalOptions="Center" Grid.Column="1" Text="Удалить" Command="{Binding Notes.DeleteNoteCommand}" CommandParameter="{Binding}" />
-            <Button HorizontalOptions="Center" Grid.Column="2" Text="Назад" Command="{Binding Path=Notes.BackCommand}" />
+            <Button VerticalOptions="Center" HorizontalOptions="Start"  Text="Добавить" Command="{Binding Notes.SaveNoteCommand}" CommandParameter="{Binding}" />
+            <Button VerticalOptions="Center" HorizontalOptions="Start" Grid.Column="1" Text="Удалить" Command="{Binding Notes.DeleteNoteCommand}" CommandParameter="{Binding}" />
+            <Button VerticalOptions="Center" HorizontalOptions="Start" Grid.Column="2" Text="Назад" Command="{Binding Path=Notes.BackCommand}" />
         </Grid>
     </StackLayout>
 </ContentPage>

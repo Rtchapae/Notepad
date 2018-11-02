@@ -6,10 +6,25 @@ namespace Diary.Views
 {
     public partial class NotesListPage : ContentPage
     { 
-        public NotesListPage()
+        public NotesListPage(NoteListViewModel viewModel)
         {
             InitializeComponent();
-            BindingContext = new NoteListViewModel((IUIService)App.Container.Resolve(typeof(IUIService))) { Navigation = this.Navigation };
+            ViewModel = viewModel;
+            //  BindingContext = new NoteListViewModel((IUIService)App.Container.Resolve(typeof(IUIService))) { Navigation = this.Navigation };
+        }
+
+        public NoteListViewModel ViewModel
+        {
+            get => BindingContext as NoteListViewModel;
+            set
+            {
+               value.Navigation = this.Navigation;
+                BindingContext = value;
+            } 
+        }
+        private void SearchNotes(string text)
+        {
+           ViewModel.SearchNotes(text);
         }
     }
 }
