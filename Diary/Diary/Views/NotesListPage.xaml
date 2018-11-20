@@ -20,7 +20,7 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-
+            
             <customs:CustomListview  x:Name="NoteListLeft" ItemsSource="{Binding NotesLeft}"
                           SelectedItem="{Binding SelectedNote, Mode=TwoWay}" HasUnevenRows="True">
                 <customs:CustomListview.ItemTemplate>
@@ -35,7 +35,7 @@
                                              HeightRequest="50"  />-->
                                         <StackLayout>
                                             <Label Text="{Binding Title}" FontAttributes="Bold" FontSize="18" />
-                                            <Label Text="{Binding Message}" FontSize="Small" />
+                                            <Label Text="{Binding MessagePreview}" FontSize="Small" />
                                         </StackLayout>
                                     </StackLayout>
                                 </Frame>
@@ -44,7 +44,7 @@
                     </DataTemplate>
                 </customs:CustomListview.ItemTemplate>
             </customs:CustomListview>
-            <customs:CustomListview  Grid.Column="1" x:Name="NoteListRight" ItemsSource="{Binding NotesRight}"
+            <customs:CustomListview   Grid.Column="1" x:Name="NoteListRight" ItemsSource="{Binding NotesRight}"
                           SelectedItem="{Binding SelectedNote, Mode=TwoWay}" HasUnevenRows="True">
                 <customs:CustomListview.ItemTemplate>
                     <DataTemplate>
@@ -58,7 +58,7 @@
                                              HeightRequest="50"  />-->
                                         <StackLayout>
                                             <Label Text="{Binding Title}" FontAttributes="Bold" FontSize="18" />
-                                            <Label Text="{Binding Message}" FontSize="Small" />
+                                            <Label  Text="{Binding MessagePreview}" FontSize="Small" />
                                         </StackLayout>
                                     </StackLayout>
                                 </Frame>

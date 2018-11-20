@@ -164,6 +164,7 @@ namespace Diary.ViewModels
             NotesLeft = new ObservableCollection<NoteViewModel>();
             foreach (var allNote in allNotes)
             {
+                allNote.MessagePreview = GetPreviewText(allNote.Message);
                 if (isLeftNote)
                 {
                     NotesLeft.Add(allNote);
@@ -203,6 +204,14 @@ namespace Diary.ViewModels
                 return result;
             }
 
+        }
+
+        private string GetPreviewText(string message)
+        {
+            if (message.Length > 150)
+                return $"{message.Substring(0, 150)}...";
+            else
+                return message;
         }
 
         public void SearchNotes(string text)

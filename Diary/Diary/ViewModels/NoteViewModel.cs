@@ -44,7 +44,16 @@ namespace Diary.ViewModels
                 OnPropertyChanged(() => Message);
             }
         }
-
+        private string _messagePreview;
+        public string MessagePreview
+        {
+            get => _messagePreview;
+            set
+            {
+                _messagePreview = value;
+                OnPropertyChanged(() => MessagePreview);
+            }
+        }
 
 
         private NoteListViewModel _notes;
