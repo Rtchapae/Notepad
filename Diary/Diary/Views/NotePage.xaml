@@ -8,25 +8,24 @@
             <On Platform="Android" Value="10, 0" />
         </OnPlatform>
     </ContentPage.Padding>
-    <StackLayout>
-        <StackLayout x:Name="noteStack">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="3*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <StackLayout x:Name="noteStack" Grid.ColumnSpan="3" Grid.Row="0">
             <Label Text="Тема" />
             <Entry Text="{Binding Title}"   FontSize="18" />
             <Label Text="Текст" />
             <Editor Text="{Binding Message}"  FontSize="Medium" />
         </StackLayout>
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-            <Button VerticalOptions="Center" HorizontalOptions="Start"  Text="Добавить" Command="{Binding Notes.SaveNoteCommand}" CommandParameter="{Binding}" />
-            <Button VerticalOptions="Center" HorizontalOptions="Start" Grid.Column="1" Text="Удалить" Command="{Binding Notes.DeleteNoteCommand}" CommandParameter="{Binding}" />
-            <Button VerticalOptions="Center" HorizontalOptions="Start" Grid.Column="2" Text="Назад" Command="{Binding Path=Notes.BackCommand}" />
-        </Grid>
-    </StackLayout>
+        <Button VerticalOptions="Center" HorizontalOptions="Start" Grid.Row="1" Grid.Column="0" Text="Добавить" Command="{Binding Notes.SaveNoteCommand}" CommandParameter="{Binding}" />
+        <Button VerticalOptions="Center" HorizontalOptions="Start" Grid.Row="1" Grid.Column="1" Text="Удалить" Command="{Binding Notes.DeleteNoteCommand}" CommandParameter="{Binding}" />
+        <Button VerticalOptions="Center" HorizontalOptions="Start" Grid.Row="1" Grid.Column="2" Text="Назад" Command="{Binding Path=Notes.BackCommand}" />
+    </Grid>
 </ContentPage>
