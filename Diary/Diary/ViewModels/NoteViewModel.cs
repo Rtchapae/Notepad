@@ -23,6 +23,17 @@ namespace Diary.ViewModels
             }
         }
 
+        private string _oldTitle;
+        public string OldTitle
+        {
+            get { return _oldTitle; }
+            set
+            {
+                _oldTitle = value;
+                OnPropertyChanged(() => OldTitle);
+            }
+        }
+
         private int _id;
         public int Id
         {
@@ -42,6 +53,17 @@ namespace Diary.ViewModels
             {
                 _message = value;
                 OnPropertyChanged(() => Message);
+            }
+        }
+
+        private string _oldMessage;
+        public string OldMessage
+        {
+            get { return _oldMessage; }
+            set
+            {
+                _oldMessage = value;
+                OnPropertyChanged(() => OldMessage);
             }
         }
         private string _messagePreview;

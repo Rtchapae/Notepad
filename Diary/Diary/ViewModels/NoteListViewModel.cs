@@ -15,6 +15,8 @@ namespace Diary.ViewModels
         public ICommand DeleteNoteCommand { protected set; get; }
         public ICommand SaveNoteCommand { protected set; get; }
         public ICommand BackCommand { protected set; get; }
+        public delegate void Save(object obj);
+        public Save SaveData;
         public INavigation Navigation { get; set; }
         private readonly IUIService _uiService;
         public NoteListViewModel(IUIService uiService)
@@ -25,6 +27,7 @@ namespace Diary.ViewModels
             DeleteNoteCommand = new Command(DeleteNote);
             SaveNoteCommand = new Command(SaveNote);
             BackCommand = new Command(Back);
+            SaveData = SaveNote;
         }
 
         #region Property
@@ -82,7 +85,6 @@ namespace Diary.ViewModels
         #endregion
 
 
-
         #region CommandMethods
         private void Back()
         {
@@ -98,6 +100,8 @@ namespace Diary.ViewModels
                     note.Title = string.IsNullOrEmpty(note.Title)
                         ? DateTime.Today.ToShortDateString()
                         : note.Title;
+                    note.OldMessage = note.Message;
+                    note.OldTitle = note.Title;
                     if (AllNotes.Any(_ => _.Id == note.Id))
                     {
                         var old = AllNotes.First(_ => _.Id == note.Id);
@@ -150,7 +154,10 @@ namespace Diary.ViewModels
             var notes =  App.Database.GetItems();
             foreach (var note in notes)
             {
-                AllNotes.Add((NoteViewModel)ConvertToNote(note).note);
+                var item = (NoteViewModel)ConvertToNote(note).note;
+                item.OldMessage = note.Message;
+                item.OldTitle = note.Title;    
+                AllNotes.Add(item);
             }
             ShowNotes(AllNotes);
         }

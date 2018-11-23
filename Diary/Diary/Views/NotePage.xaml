@@ -20,9 +20,9 @@
         </Grid.RowDefinitions>
         <StackLayout x:Name="noteStack" Grid.ColumnSpan="3" Grid.Row="0">
             <Label Text="Тема" />
-            <Entry Text="{Binding Title}"   FontSize="18" />
+            <Entry Text="{Binding Title, Mode=TwoWay}"   FontSize="18" />
             <Label Text="Текст" />
-            <Editor Text="{Binding Message}"  FontSize="Medium" />
+            <Editor Text="{Binding Message, Mode=TwoWay}"  FontSize="Medium" />
         </StackLayout>
         <Button VerticalOptions="Center" HorizontalOptions="Start" Grid.Row="1" Grid.Column="0" Text="Добавить" Command="{Binding Notes.SaveNoteCommand}" CommandParameter="{Binding}" />
         <Button VerticalOptions="Center" HorizontalOptions="Start" Grid.Row="1" Grid.Column="1" Text="Удалить" Command="{Binding Notes.DeleteNoteCommand}" CommandParameter="{Binding}" />
